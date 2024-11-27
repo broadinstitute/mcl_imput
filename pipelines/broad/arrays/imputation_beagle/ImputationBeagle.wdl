@@ -154,7 +154,7 @@ workflow ImputationBeagle {
       }
 
       # Adding UpdateHeader to solve contig header re-ordering issue
-      call tasks.UpdateHeader {
+      call tasks.UpdateHeader as UpdateHeaderForSubset {
         input:
           vcf = SubsetVcfToRegion.output_vcf,
           vcf_index = SubsetVcfToRegion.output_vcf_index,
@@ -164,7 +164,7 @@ workflow ImputationBeagle {
 
       call tasks.SetIDs as SetIdsVcfToImpute {
         input:
-          vcf = UpdateHeader.output_vcf,
+          vcf = UpdateHeaderForSubset.output_vcf,
           output_basename = "input_samples_with_variant_ids"
       }
 
