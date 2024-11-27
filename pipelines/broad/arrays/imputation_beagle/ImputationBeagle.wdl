@@ -153,9 +153,18 @@ workflow ImputationBeagle {
           end = end
       }
 
-      call tasks.SetIDs as SetIdsVcfToImpute {
+      # Adding UpdateHeader to solve contig header re-ordering issue
+      call tasks.UpdateHeader {
         input:
           vcf = SubsetVcfToRegion.output_vcf,
+          vcf_index = SubsetVcfToRegion.output_vcf_index,
+          ref_dict = ref_dict,
+          basename = "input_samples_subset_to_chunk"
+      }
+
+      call tasks.SetIDs as SetIdsVcfToImpute {
+        input:
+          vcf = UpdateHeader.output_vcf,
           output_basename = "input_samples_with_variant_ids"
       }
 
